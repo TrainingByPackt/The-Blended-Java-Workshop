@@ -5,19 +5,31 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
-
 public class ActivityPacktpub {
     public static void main(String[] args) {
         try {
+            String url = "http://hc.apache.org/";
+
             Document doc =
-                    Jsoup.connect("https://www.packtpub.com/tech/java").
-                            get();
-            Elements titles = doc.select("div.author-names");
-            for (Element div : titles) {
-                System.out.println(div.text());
+                    Jsoup.connect(url).get();
+
+            Elements sections = doc.select("div.section");
+
+            for (Element div : sections) {
+                for (Element child : div.children()) {
+                    String tag = child.tagName();
+
+                    if (tag.equalsIgnoreCase("h3")) {
+                        Elements links = child.getElementsByTag("a");
+
+                        for (Element link : links) {
+                            System.out.println(link.text());
+                        }
+                    }
+                }
             }
-        } catch (IOException e) {
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
